@@ -5,6 +5,7 @@ import random
 import re
 import joblib
 import json
+import time
 from collections import defaultdict
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
@@ -27,9 +28,14 @@ def preprocess_data(csvfile):
     product_groups = np.array(df["product_group"])
     raw_text_list = np.array(df["text"])
 
-    clean_text_list = raw_text_list
+    clean_text_list = []
+    for doc in raw_text_list:
+        splitdoc = doc.lower().split()
+        cleandoc = " ".join([w for w in splitdoc if not w in stops]).strip()
 
-    return ids, product_groups, clean_text_list
+        clean_text_list.append(cleandoc)
+
+    return ids, product_groups, np.array(clean_text_list)
 
 def define_group_labels(product_groups): 
     """
